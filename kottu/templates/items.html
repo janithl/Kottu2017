@@ -24,11 +24,11 @@
             </ul>
         </div>
         <div class="panel-footer">
-            {#<button class="btn btn-link btn-ts">Last Updated: {{ blog.timestamp }}</button>#}
+            <button class="btn btn-link btn-ts">Last Updated: </button>
             <button class="btn btn-link btn-ts">{{ posts.total }} posts on Kottu</button>
-            {#<button class="btn btn-link btn-ts">Average Spice: <img title="Average post popularity is {{ blog.buzz }} chilies"
-                src="http://kottu.org/img/icons/chili{{ blog.buzz }}.png" alt="{{ blog.buzz }} chilies"/>
-            </button>#}
+            <button class="btn btn-link btn-ts" title="Average post popularity is  chilies">
+                Average Spice: <img src="http://kottu.org/img/icons/chili1.png" alt=" chilies"/>
+            </button>
         </div>
     </article>
     {% endif %}
@@ -53,11 +53,11 @@
             <button class="btn btn-link btn-xs btn-ts" title="{{ post.timestamp | format_time }}">{{ post.timestamp | format_time('human') }}</button>
             <button class="btn btn-primary btn-xs btn-facebook" onClick="window.open('http://www.facebook.com/share.php?u={{ post.link }}',
             'Share on Facebook', 'toolbar=no, scrollbars=yes, width=500, height=400');"
-            title="This post was liked/shared {{ post.fbcount }} time(s)">
+            title="This post was liked/shared {{ post.fbcount }} time(s) on Facebook">
                 <span class="glyphicon glyphicon-share-alt"></span> Shares: {{ post.fbcount }}
             </button>
-            <button class="btn btn-link btn-xs pull-right" title="The post popularity is {{ post.buzz }} chilies">
-                <img src="http://kottu.org/img/icons/chili{{ post.buzz }}.png" alt="{{ post.buzz }} chilies"/>
+            <button class="btn btn-link btn-xs pull-right" title="The post popularity is {{ post.buzz | chilies }} chilies ({{ post.buzz | round(2) }})">
+                <img src="http://kottu.org/img/icons/chili{{ post.buzz | chilies }}.png" alt="{{ post.buzz | chilies }} chilies"/>
             </button>
         </div>
     </article>
@@ -70,4 +70,5 @@
     {% endif %}
 </div>
 </div>
+{% include "sidebar.html" %}
 {% endblock %}
