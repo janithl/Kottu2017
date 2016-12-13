@@ -1,11 +1,14 @@
+from flask import render_template, jsonify
+
 from kottu import app
-from kottu.models import Post
+from kottu.models import Post, Blog
 
 @app.route('/')
 def index():
-	return 'Hello World!'
+	posts = Post.query.order_by(Post.id.desc()).paginate()
+	return render_template('article.html', title='All Posts', posts=posts)
 
-@app.route('/post/<int:id>/')
-def show_post(id):
-    post = Post.query.get(id)
-    return post.title + ': ' + post.content
+@app.route('/blog/<int:blog_id>/')
+def show_blog_posts(blog_id):
+	blog = Blog.query.get_or_404(id)
+	return blog.name #render_template('article.html', title=blog.name, posts=blog.posts)
