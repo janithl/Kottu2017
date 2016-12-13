@@ -1,4 +1,4 @@
 env
-kottu/kottu.cfg
+instance
 *.pyc
 *.pyo
