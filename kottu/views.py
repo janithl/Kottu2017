@@ -11,6 +11,10 @@ def index(page):
 	posts = Post.query.order_by(Post.id.desc()).paginate(page, PER_PAGE)
 	return render_template('article.html', title='All Posts', posts=posts)
 
+@app.route('/about/')
+def about():
+	return render_template('about.html', title='About Kottu')
+
 @app.route('/blog/<int:blog_id>/')
 def show_blog_posts(blog_id):
 	blog = Blog.query.get_or_404(id)
