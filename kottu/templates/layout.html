@@ -30,7 +30,7 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="navbar-collapse">
-                <p class="navbar-text hidden-sm"><strong class="visible-xs-inline">Kottu </strong>syndicates over <a title="View our blogroll" href="/blogroll">
+                <p class="navbar-text hidden-sm"><strong class="visible-xs-inline">Kottu </strong>syndicates over <a title="View our blogroll" href="{{ url_for('blogroll') }}">
 Sri Lankan blogs</a>. You can <a title="Learn more about Kottu and how you can join" href="{{ url_for('about') }}">join too</a>.</p>
                 <form class="navbar-form navbar-left" method="GET" action="/search/">
                     <div class="form-group">

@@ -1,4 +1,4 @@
-from flask import render_template, jsonify
+from flask import request, redirect, render_template
 import arrow
 
 from kottu import app
@@ -6,14 +6,13 @@ from kottu.models import Post, Blog
 
 PER_PAGE = 20 # items per page
 
+@app.template_filter('format_time')
 def format_time(timestamp, format=None):
-	"""Function to return human-readable/formatted time, then attached to Jinja env"""
+	"""Jinja filter to return human-readable/formatted time"""
 	if(format == 'human'):
 		return arrow.get(timestamp).humanize()
 	else:
 		return arrow.get(timestamp).format()
-
-app.jinja_env.filters['format_time'] = format_time
 
 @app.route('/', defaults={'page': 1})
 @app.route('/page/<int:page>/')
@@ -22,6 +21,11 @@ def index(page):
 	posts = Post.query.order_by(Post.id.desc()).paginate(page, PER_PAGE)
 	return render_template('items.html', title='All Posts',
 		posts=posts, endpoint='index')
+
+@app.route('/go/')
+def go():
+	"""Implements /go/?id={}&url={}, which tracks clicks"""
+	return redirect(request.args.get('url'))
 
 @app.route('/about/')
 def about():

@@ -7,7 +7,7 @@
     {%- for post in posts.items %}
     <article class="panel panel-default">
         <div class="panel-body">
-            <h3><a target="_blank" href="go/?id={{ post.id }}&url={{ post.link }}" title="{{ post.link }}">{{ post.title }}</a></h3>
+            <h3><a target="_blank" href="{{ url_for('go', id=post.id, url=post.link) }}" title="{{ post.link }}">{{ post.title }}</a></h3>
             <a href="{{ url_for('blog', id=post.blog.id) }}" title="{{ post.blog.url }}">{{ post.blog.name }}</a>
 
             <div class="media hidden-xs">
