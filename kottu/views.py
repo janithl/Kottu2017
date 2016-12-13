@@ -56,9 +56,9 @@ def blogroll(page):
 		blogs=blogs, endpoint='blogroll', lang=None, time=None)
 
 @app.route('/blog/<int:id>/', defaults={'page': 1, 'popular': None})
-@app.route('/blog/<int:id>/<popular>', defaults={'page': 1})
+@app.route('/blog/<int:id>/<string:popular>', defaults={'page': 1})
 @app.route('/blog/<int:id>/page/<int:page>/', defaults={'popular': None})
-@app.route('/blog/<int:id>/<popular>/page/<int:page>/')
+@app.route('/blog/<int:id>/<string:popular>/page/<int:page>/')
 def blog(id, popular, page):
 	blog = Blog.query.get(id)
 	if(popular):

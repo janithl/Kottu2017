@@ -49,17 +49,17 @@
 		</div>
 	</div>
 
-<?php if($this->mainpage === true): ?>
+	{% if endpoint and endpoint == 'index' %}
 	<div class="panel panel-default">
 		<div class="panel-heading"><h3 class="panel-title">Grab Page RSS Feed</h3></div>
 		<div class="panel-body">
 			<p>You can grab an RSS feed of posts that appear on this page</p>
 		</div>
 		<div class="panel-footer text-center">
-			<a class="btn btn-success" href="<?php echo config('basepath') . '/feed/' . $this->lang . '/' . $this->time; ?>" 
+			<a class="btn btn-success" href="" 
 				title="Get the rss feed for the page/combination currently selected">Grab Feed →</a>
 		</div>
 	</div>
-<?php endif; ?>
+	{% endif %}
 </div>
 
