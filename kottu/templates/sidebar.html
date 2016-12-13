@@ -11,8 +11,12 @@
 <?php endforeach; ?>
 		</div>
 		<div class="panel-footer text-center">
-			<a class="btn btn-success" title="View posts listed by Kottu most clicked trend" 
-				href="<?= config('basepath') . '/' . $this->lang . '/trending/';?>">See More →</a>
+			<a class="btn btn-success" title="View posts listed by Kottu most clicked trend"
+				{% if lang %} 
+				href="{{ url_for('index', lang=lang, time='trending') }}">See More →</a>
+				{% else %}
+				href="{{ url_for('index', lang='all', time='trending') }}">See More →</a>
+				{% endif %}
 		</div>
 	</div>
 	
@@ -29,7 +33,11 @@
 		</div>
 		<div class="panel-footer text-center">
 			<a class="btn btn-success" title="View posts listed by social media popularity" 
-				href="<?= config('basepath') . '/' . $this->lang . '/today/';?>">See More →</a>
+				{% if lang %} 
+				href="{{ url_for('index', lang=lang, time='today') }}">See More →</a>
+				{% else %}
+				href="{{ url_for('index', lang='all', time='today') }}">See More →</a>
+				{% endif %}
 		</div>
 	</div>
 	

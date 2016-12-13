@@ -40,7 +40,9 @@ Sri Lankan blogs</a>. You can <a title="Learn more about Kottu and how you can j
                     <button tabindex=2 id="searchbtn" type="submit" class="btn btn-default">Search</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    
+                    <li class="langs{% if lang and lang == 'en' %} active{% endif %}"><a class="menuitem" title="View English language posts" href="{{ url_for('index', lang='en', time=time) }}">English</a></li>
+                    <li class="langs{% if lang and lang == 'si' %} active{% endif %}"><a class="menuitem" title="View Sinhala language posts" href="{{ url_for('index', lang='si', time=time) }}">සිංහල</a></li>
+                    <li class="langs{% if lang and lang == 'ta' %} active{% endif %}"><a class="menuitem" title="View Tamil language posts"   href="{{ url_for('index', lang='ta', time=time) }}">தமிழ்</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div>

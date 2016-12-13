@@ -9,9 +9,11 @@ class Post(db.Model):
     title = db.Column(db.String(192))
     content = db.Column('postContent', db.String)
     thumbnail = db.Column(db.String(128))
+    language = db.Column(db.String(2))
     timestamp = db.Column('serverTimestamp', db.Integer)
     fbcount = db.Column(db.Integer)
     buzz = db.Column('postBuzz', db.Float)
+    trend = db.Column(db.Float)
 
     def __init__(self):
         pass

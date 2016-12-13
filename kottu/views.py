@@ -5,13 +5,28 @@ from kottu.models import Post, Blog
 
 PER_PAGE = 20 # items per page
 
-@app.route('/', defaults={'page': 1})
-@app.route('/page/<int:page>/')
-def index(page):
+@app.route('/', defaults={'page': 1, 'lang': None, 'time': None})
+@app.route('/<string:lang>/', defaults={'page': 1, 'time': None})
+@app.route('/<string:lang>/<string:time>/', defaults={'page': 1})
+@app.route('/page/<int:page>/', defaults={'lang': None, 'time': None})
+@app.route('/<string:lang>/page/<int:page>/', defaults={'time': None})
+@app.route('/<string:lang>/<string:time>/page/<int:page>/')
+def index(page, lang, time):
 	"""Renders the front page of Kottu, with all the latest posts"""
-	posts = Post.query.order_by(Post.id.desc()).paginate(page, PER_PAGE)
+	posts = Post.query
+	if(lang and lang != 'all'):
+		posts = posts.filter(Post.language == lang)
+
+	if(time and time == 'trending'):
+		posts = posts.order_by(Post.trend.desc())
+	elif(time):
+		posts = posts.order_by(Post.buzz.desc())
+	else:
+		posts = posts.order_by(Post.id.desc())
+
+	posts = posts.paginate(page, PER_PAGE)
 	return render_template('items.html', title='Kottu: Latest Posts',
-		posts=posts, endpoint='index')
+		posts=posts, endpoint='index', lang=lang, time=time)
 
 @app.route('/go/')
 def go():
@@ -21,7 +36,8 @@ def go():
 @app.route('/about/')
 def about():
 	"""Renders the Kottu about page"""
-	return render_template('about.html', title='Kottu: About Us')
+	return render_template('about.html', title='Kottu: About Us',
+		endpoint='about', lang=None, time=None)
 
 @app.route('/blogroll/', defaults={'page': 1})
 @app.route('/blogroll/page/<int:page>/')
@@ -29,7 +45,7 @@ def blogroll(page):
 	"""Renders the Kottu blogroll"""
 	blogs = Blog.query.order_by(Blog.name.asc()).paginate(page, PER_PAGE * 5)
 	return render_template('blogroll.html', title='Kottu: Blogroll',
-		blogs=blogs, endpoint='blogroll')
+		blogs=blogs, endpoint='blogroll', lang=None, time=None)
 
 @app.route('/blog/<int:id>/', defaults={'page': 1, 'popular': None})
 @app.route('/blog/<int:id>/<popular>', defaults={'page': 1})
@@ -46,4 +62,5 @@ def blog(id, popular, page):
 	posts = posts.paginate(page, PER_PAGE)
 
 	return render_template('items.html', title=title,
-		posts=posts, endpoint='blog', blog=blog, popular=popular)
+		posts=posts, endpoint='blog', blog=blog, popular=popular,
+		lang=None, time=None)
