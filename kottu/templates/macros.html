@@ -1,10 +1,14 @@
-{% macro render_pagination(pagination, endpoint) %}
+{% macro render_pagination(pagination, endpoint, id=None) %}
     <nav class=text-center>
         <ul class="pagination">
         {%- for page in pagination.iter_pages() %}
             {% if page %}
             <li{% if(page == pagination.page) %} class="active"{% endif %}>
+                {% if id %}
+                <a href="{{ url_for(endpoint, id=id, page=page) }}">{{ page }}</a>
+                {% else %}
                 <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+                {% endif %}
             </li>
             {% else %}
             <li class="disabled"><span>&hellip;</span></li>

@@ -4,10 +4,14 @@ from kottu.database import db
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column('postID', db.Integer, primary_key=True)
-    title = db.Column(db.String(192))
-    link = db.Column(db.String(320))
-    content = db.Column('postContent', db.String)
     blog_id = db.Column('blogID', db.Integer)
+    link = db.Column(db.String(320))
+    title = db.Column(db.String(192))
+    content = db.Column('postContent', db.String)
+    thumbnail = db.Column(db.String(128))
+    timestamp = db.Column('serverTimestamp', db.Integer)
+    fbcount = db.Column(db.Integer)
+    buzz = db.Column('postBuzz', db.Float)
 
     def __init__(self):
         pass
