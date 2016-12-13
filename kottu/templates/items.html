@@ -4,6 +4,35 @@
 {% block body %}
 <div class="col-sm-12 col-md-8">
 <div class="content"><!-- content -->
+    {% if blog %}
+    <article class="panel panel-default"><!-- blog's post listing -->
+        <div class="panel-heading">
+            <a href="{{ blog.url }}" target="_blank">
+                <h3 class="panel-title">
+                    {{ blog.name }} <small>({{ blog.url }})</small>
+                </h3>
+            </a>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-pills">
+                <li role="presentation"{% if not popular %} class="active"{% endif %}>
+                    <a href="{{ url_for('blog', id=blog.id, popular=None) }}">Latest Posts</a>
+                </li>
+                <li role="presentation"{% if popular %} class="active"{% endif %}>
+                    <a href="{{ url_for('blog', id=blog.id, popular='popular') }}">Most Popular Posts</a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-footer">
+            {#<button class="btn btn-link btn-ts">Last Updated: {{ blog.timestamp }}</button>#}
+            <button class="btn btn-link btn-ts">{{ posts.total }} posts on Kottu</button>
+            {#<button class="btn btn-link btn-ts">Average Spice: <img title="Average post popularity is {{ blog.buzz }} chilies"
+                src="http://kottu.org/img/icons/chili{{ blog.buzz }}.png" alt="{{ blog.buzz }} chilies"/>
+            </button>#}
+        </div>
+    </article>
+    {% endif %}
+
     {%- for post in posts.items %}
     <article class="panel panel-default">
         <div class="panel-body">
@@ -35,7 +64,7 @@
     {%- endfor %}
 
     {% if blog %}
-    {{ render_pagination(posts, endpoint, blog.id) }}
+    {{ render_pagination(posts, endpoint, blog.id, popular) }}
     {% else %}
     {{ render_pagination(posts, endpoint) }}
     {% endif %}

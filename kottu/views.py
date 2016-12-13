@@ -40,10 +40,17 @@ def blogroll(page):
 	return render_template('blogroll.html', title='Kottu Blogroll',
 		blogs=blogs, endpoint='blogroll')
 
-@app.route('/blog/<int:id>/', defaults={'page': 1})
-@app.route('/blog/<int:id>/page/<int:page>/')
-def blog(id, page):
+@app.route('/blog/<int:id>/', defaults={'page': 1, 'popular': None})
+@app.route('/blog/<int:id>/<popular>', defaults={'page': 1})
+@app.route('/blog/<int:id>/page/<int:page>/', defaults={'popular': None})
+@app.route('/blog/<int:id>/<popular>/page/<int:page>/')
+def blog(id, popular, page):
 	blog = Blog.query.get(id)
-	posts = blog.posts.order_by(Post.id.desc()).paginate(page, PER_PAGE)
+	if(popular):
+		posts = blog.posts.order_by(Post.buzz.desc())
+	else:
+		posts = blog.posts.order_by(Post.id.desc())
+	posts = posts.paginate(page, PER_PAGE)
+
 	return render_template('items.html', title=blog.name,
-		posts=posts, endpoint='blog', blog=blog)
+		posts=posts, endpoint='blog', blog=blog, popular=popular)
