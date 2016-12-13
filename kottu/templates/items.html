@@ -33,6 +33,31 @@
     </article>
     {% endif %}
 
+    {% if time and time != 'off' %}
+    <article class="panel panel-default"><!-- popular post timescale selector -->
+        <div class="panel-body">
+            <ul class="nav nav-pills">
+                <li role="presentation" class="disabled"><a>Hot Posts: </a></li>
+                <li role="presentation"{% if time == 'trending' %} class="active"{% endif %}>
+                    <a href="{{ url_for('index', lang=lang, time='trending') }}">Trending</a>
+                </li>
+                <li role="presentation"{% if time == 'today' %} class="active"{% endif %}>
+                    <a href="{{ url_for('index', lang=lang, time='today') }}">Today</a>
+                </li>
+                <li role="presentation"{% if time == 'week' %} class="active"{% endif %}>
+                    <a href="{{ url_for('index', lang=lang, time='week') }}">This Week</a>
+                </li>
+                <li role="presentation"{% if time == 'month' %} class="active"{% endif %}>
+                    <a href="{{ url_for('index', lang=lang, time='month') }}">This Month</a>
+                </li>
+                <li role="presentation"{% if time == 'all' %} class="active"{% endif %}>
+                    <a href="{{ url_for('index', lang=lang, time='all') }}">All Time</a>
+                </li>
+            </ul>
+        </div>
+    </article>
+    {% endif %}
+
     {%- for post in posts.items %}
     <article class="panel panel-default">
         <div class="panel-body">

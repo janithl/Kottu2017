@@ -1,4 +1,5 @@
 from flask import request, redirect, render_template
+from time import time as now
 
 from kottu import app
 from kottu.models import Post, Blog
@@ -17,9 +18,16 @@ def index(page, lang, time):
 	if(lang and lang != 'all'):
 		posts = posts.filter(Post.language == lang)
 
+	if(time == 'today' or time == 'trending'):
+		posts = posts.filter(Post.timestamp > now() - (24 * 60 * 60))
+	elif(time == 'week'):
+		posts = posts.filter(Post.timestamp > now() - (7 * 24 * 60 * 60))
+	elif(time == 'month'):
+		posts = posts.filter(Post.timestamp > now() - (30 * 24 * 60 * 60))
+
 	if(time and time == 'trending'):
 		posts = posts.order_by(Post.trend.desc())
-	elif(time):
+	elif(time and time != 'off'):
 		posts = posts.order_by(Post.buzz.desc())
 	else:
 		posts = posts.order_by(Post.id.desc())
