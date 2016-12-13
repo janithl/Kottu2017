@@ -2,7 +2,7 @@
 {% from "macros.html" import render_pagination with context %}
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
-    {% for post in posts.items %}
+    {%- for post in posts.items %}
     <article class="panel panel-default">
         <div class="panel-body">
             <h3><a  target="_blank" href="go/?id={{ post.id }}&url={{ post.link }}">{{ post.title }}</a></h3>
@@ -32,7 +32,7 @@
             </button>
         </div> -->
     </article>
-    {% endfor %}
+    {%- endfor %}
 
     {{ render_pagination(posts, 'index') }}
 
