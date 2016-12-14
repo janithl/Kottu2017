@@ -1,8 +1,10 @@
 import click, feedparser
 from time import time as now
+from sqlalchemy import exc
 
 from kottu import app
 from kottu.models import Post, Blog
+from kottu.database import db
 
 @app.cli.command()
 def feedget():
@@ -23,6 +25,14 @@ def fetchandstoreposts(blog_id, blog_rss):
 	if(len(feed.entries)):
 		click.echo('{} items returned'.format(len(feed.entries)));
 		for item in feed.entries:
-			click.echo(item.link + ' - ' + item.title)
+			post = Post(blog_id, item.link, item.title, 'en', int(now()))
+			db.session.add(post)
+			try:
+				db.session.commit()
+				click.echo('Added {} ({}) to database'.format(item.title, item.link))
+			except exc.SQLAlchemyError:
+				db.session.rollback()
+				pass
+
 	else:
 		click.echo('Error! Feed returned no items.')

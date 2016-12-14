@@ -11,12 +11,23 @@ class Post(db.Model):
     thumbnail = db.Column(db.String(128))
     language = db.Column(db.String(2))
     timestamp = db.Column('serverTimestamp', db.Integer)
+    tweetcount = db.Column(db.Integer)
     fbcount = db.Column(db.Integer)
+    apits = db.Column('api_ts', db.Integer)
     buzz = db.Column('postBuzz', db.Float)
     trend = db.Column(db.Float)
 
-    def __init__(self):
-        pass
+    def __init__(self, blog_id, link, title, lang, timestamp):
+        self.blog_id = blog_id
+        self.link = link
+        self.title = title
+        self.language = lang
+        self.timestamp = timestamp
+        self.tweetcount = 0
+        self.fbcount = 0
+        self.apits = 0
+        self.buzz = 0
+        self.trend = 0
 
     def __repr__(self):
         return '<Post %r>' % self.title
