@@ -26,6 +26,9 @@ class Blog(db.Model):
     id = db.Column('bid', db.Integer, primary_key=True)
     name = db.Column('blogName', db.String(64))
     url = db.Column('blogURL', db.String(64))
+    rss = db.Column('blogRSS', db.String(128))
+    accessed = db.Column('access_ts', db.Integer)
+    active = db.Column(db.Integer)
     posts = db.relationship('Post', backref='blog',
         primaryjoin='Post.blog_id==Blog.id',
         foreign_keys='Post.blog_id', lazy='dynamic')

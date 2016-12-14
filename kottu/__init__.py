@@ -7,3 +7,4 @@ import kottu.utils
 import kottu.database
 import kottu.models
 import kottu.views
+import kottu.cli
