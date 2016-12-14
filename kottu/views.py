@@ -63,12 +63,12 @@ def blog(id, popular, page):
 	blog = Blog.query.get(id)
 	if(popular):
 		posts = blog.posts.order_by(Post.buzz.desc())
-		title = 'Kottu: Most popular posts from ' + blog.name
+		title = 'Kottu: Most popular posts from {}'
 	else:
 		posts = blog.posts.order_by(Post.id.desc())
-		title = 'Kottu: Latest posts from ' + blog.name
+		title = 'Kottu: Latest posts from {}'
 	posts = posts.paginate(page, PER_PAGE)
 
-	return render_template('items.html', title=title,
+	return render_template('items.html', title=title.format(blog.name),
 		posts=posts, endpoint='blog', blog=blog, popular=popular,
 		lang=None, time=None)
