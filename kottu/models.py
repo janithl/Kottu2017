@@ -17,17 +17,18 @@ class Post(db.Model):
     buzz = db.Column('postBuzz', db.Float)
     trend = db.Column(db.Float)
 
-    def __init__(self, blog_id, link, title, lang, timestamp):
-        self.blog_id = blog_id
-        self.link = link
-        self.title = title
-        self.language = lang
-        self.timestamp = timestamp
+    def __init__(self, blog_id, link, title, content, lang, timestamp):
+        self.blog_id    = blog_id
+        self.link       = link
+        self.title      = title
+        self.content    = content
+        self.language   = lang
+        self.timestamp  = timestamp
         self.tweetcount = 0
-        self.fbcount = 0
-        self.apits = 0
-        self.buzz = 0
-        self.trend = 0
+        self.fbcount    = 0
+        self.apits      = 0
+        self.buzz       = 0
+        self.trend      = 0
 
     def __repr__(self):
         return '<Post %r>' % self.title

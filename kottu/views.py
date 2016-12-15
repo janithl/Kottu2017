@@ -30,7 +30,7 @@ def index(page, lang, time):
 	elif(time and time != 'off'):
 		posts = posts.order_by(Post.buzz.desc())
 	else:
-		posts = posts.order_by(Post.id.desc())
+		posts = posts.order_by(Post.timestamp.desc())
 
 	posts = posts.paginate(page, PER_PAGE)
 	return render_template('items.html', title='Kottu: Latest Posts',

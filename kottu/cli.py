@@ -1,8 +1,9 @@
-import click, feedparser
-from time import time as now
+import click, feedparser, time
+from flask import Markup
 from sqlalchemy import exc
 
 from kottu import app
+from kottu.utils import getlang
 from kottu.models import Post, Blog
 from kottu.database import db
 
@@ -12,10 +13,15 @@ def feedget():
 	click.echo('Began feedget')
 
 	blogs = Blog.query.filter(Blog.active == 1) \
-		.order_by(Blog.accessed.desc()).limit(20).all()
+		.order_by(Blog.accessed.desc()).limit(30).all()
 
 	for b in blogs:
-		fetchandstoreposts(b.id, b.rss)
+		if(fetchandstoreposts(b.id, b.rss)):
+			b.accessed = int(time.time())
+			try:
+				db.session.commit()
+			except exc.SQLAlchemyError:
+				db.session.rollback()
 
 	return
 
@@ -25,14 +31,20 @@ def fetchandstoreposts(blog_id, blog_rss):
 	if(len(feed.entries)):
 		click.echo('{} items returned'.format(len(feed.entries)));
 		for item in feed.entries:
-			post = Post(blog_id, item.link, item.title, 'en', int(now()))
+			# we make sure that the post is not "future dated"
+			post_time = int(min(time.mktime(item.published_parsed), time.time()))
+
+			summary = Markup(item.summary).striptags()
+
+			post = Post(blog_id, item.link, item.title, summary, 
+				getlang(item.title + summary), post_time)
 			db.session.add(post)
 			try:
 				db.session.commit()
 				click.echo('Added {} ({}) to database'.format(item.title, item.link))
 			except exc.SQLAlchemyError:
 				db.session.rollback()
-				pass
-
+		return True
 	else:
 		click.echo('Error! Feed returned no items.')
+		return False
