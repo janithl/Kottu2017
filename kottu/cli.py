@@ -1,5 +1,4 @@
-import click, feedparser, time
-from flask import Markup
+import click, feedparser, time, re
 from sqlalchemy import exc
 
 from kottu import app
@@ -13,7 +12,7 @@ def feedget():
 	click.echo('Began feedget')
 
 	blogs = Blog.query.filter(Blog.active == 1) \
-		.order_by(Blog.accessed.desc()).limit(30).all()
+		.order_by(Blog.accessed.asc()).limit(30).all()
 
 	for b in blogs:
 		if(fetchandstoreposts(b.id, b.rss)):
@@ -34,7 +33,7 @@ def fetchandstoreposts(blog_id, blog_rss):
 			# we make sure that the post is not "future dated"
 			post_time = int(min(time.mktime(item.published_parsed), time.time()))
 
-			summary = Markup(item.summary).striptags()
+			summary = re.sub("<[^>]+>", "", item.summary).strip()
 
 			post = Post(blog_id, item.link, item.title, summary, 
 				getlang(item.title + summary), post_time)
