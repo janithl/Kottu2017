@@ -65,7 +65,7 @@ def blog(id, popular, page):
 		posts = blog.posts.order_by(Post.buzz.desc())
 		title = 'Kottu: Most popular posts from {}'
 	else:
-		posts = blog.posts.order_by(Post.id.desc())
+		posts = blog.posts.order_by(Post.timestamp.desc())
 		title = 'Kottu: Latest posts from {}'
 	posts = posts.paginate(page, PER_PAGE)
 

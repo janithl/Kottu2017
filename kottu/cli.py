@@ -12,7 +12,7 @@ def feedget():
 	click.echo('Began feedget')
 
 	blogs = Blog.query.filter(Blog.active == 1) \
-		.order_by(Blog.accessed.asc()).limit(30).all()
+		.order_by(Blog.accessed.asc()).limit(100).all()
 
 	for b in blogs:
 		if(fetchandstoreposts(b.id, b.rss)):
