@@ -2,7 +2,7 @@ import click, feedparser, time, re
 from sqlalchemy import exc, func
 
 from kottu import app
-from kottu.utils import getlang
+from kottu.utils import getlang, fetchthumb
 from kottu.models import Post, Blog
 from kottu.database import db
 
@@ -63,16 +63,3 @@ def fetchandstoreposts(blog_id, blog_rss):
 	else:
 		click.echo('Error! Feed returned no items.')
 		return False
-
-def fetchthumb(item):
-	text = item.summary
-	if 'content' in item:
-		text = item.content[0].value
-
-	# regex to get an image if available
-	thumb_search = re.search('(https?:\/\/[\S]+\.(jpg|png|jpeg))', text, re.IGNORECASE)
-
-	if thumb_search:
-		return thumb_search.group(1)
-	else:
-		return None

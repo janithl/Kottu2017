@@ -1,4 +1,4 @@
-import arrow
+import arrow, re
 from collections import defaultdict
 
 from kottu import app
@@ -35,7 +35,8 @@ def chilies(buzz):
 	return out
 
 def getlang(text):
-	"""Get language via Unicode range. Partially based on:
+	"""
+		Get language via Unicode range. Partially based on:
 		https://github.com/kent37/guess-language/blob/master/guess_language/guess_language.py#L344
 	"""
 
@@ -50,3 +51,20 @@ def getlang(text):
 		return max(langs, key=langs.get)
 	else:
 		return 'en'
+
+def fetchthumb(item):
+	"""
+		Get the thumbnail image for an item if possible
+	"""
+
+	text = item.summary
+	if 'content' in item:
+		text = item.content[0].value
+
+	# regex to get an image if available
+	thumb_search = re.search('(https?:\/\/[\S]+\.(jpg|png|jpeg))', text, re.IGNORECASE)
+
+	if thumb_search:
+		return thumb_search.group(1)
+	else:
+		return None
