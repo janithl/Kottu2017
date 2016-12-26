@@ -1,18 +1,33 @@
 import click, feedparser, time, re
-from sqlalchemy import exc
+from sqlalchemy import exc, func
 
 from kottu import app
 from kottu.utils import getlang
 from kottu.models import Post, Blog
 from kottu.database import db
 
+TWO_WEEKS = 2419200 # two weeks in seconds
+
 @app.cli.command()
 def feedget():
 	"""Fetch RSS feeds"""
 	click.echo('Began feedget')
 
-	blogs = Blog.query.filter(Blog.active == 1) \
-		.order_by(Blog.accessed.asc()).limit(100).all()
+	blog_query = Blog.query.filter(Blog.active == 1) \
+		.join(Blog.posts, aliased=True).group_by(Blog.id)
+
+	# get 40 blogs updated in the last two weeks
+	updated_blogs = blog_query \
+		.having(func.max(Post.timestamp) > time.time() - TWO_WEEKS) \
+		.order_by(Blog.accessed.asc()).limit(40)
+
+	# get 60 blogs NOT updated in the last two weeks
+	not_updated_blogs = blog_query \
+		.having(func.max(Post.timestamp) <= time.time() - TWO_WEEKS) \
+		.order_by(Blog.accessed.asc()).limit(60)
+
+	# union them and query
+	blogs = updated_blogs.union_all(not_updated_blogs).all()
 
 	for b in blogs:
 		if(fetchandstoreposts(b.id, b.rss)):
@@ -33,7 +48,8 @@ def fetchandstoreposts(blog_id, blog_rss):
 			# we make sure that the post is not "future dated"
 			post_time = int(min(time.mktime(item.published_parsed), time.time()))
 
-			summary = re.sub("<[^>]+>", "", item.summary).strip()
+			# regex to remove html tags, htmlentities and urls
+			summary = re.sub("(<[^>]+>|&[^;]+;|(http)s?:\/\/\S+)", "", item.summary).strip()
 
 			post = Post(blog_id, item.link, item.title, summary, 
 				getlang(item.title + summary), post_time)
