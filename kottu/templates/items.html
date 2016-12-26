@@ -24,10 +24,10 @@
             </ul>
         </div>
         <div class="panel-footer">
-            <button class="btn btn-link btn-ts">Last Updated: </button>
+            <button class="btn btn-link btn-ts" title="Last updated on {{ updated | format_time() }}">Last Updated: {{ updated | format_time('human') }}</button>
             <button class="btn btn-link btn-ts">{{ posts.total }} posts on Kottu</button>
-            <button class="btn btn-link btn-ts" title="Average post popularity is  chilies">
-                Average Spice: <img src="http://kottu.org/img/icons/chili1.png" alt=" chilies"/>
+            <button class="btn btn-link btn-ts" title="Average post popularity is {{ buzz | chilies }} chilies ({{ buzz | round(2) }})">
+                Average Spice: <img src="http://kottu.org/img/icons/chili{{ buzz | chilies }}.png" alt="{{ buzz | chilies }} chilies"/>
             </button>
         </div>
     </article>

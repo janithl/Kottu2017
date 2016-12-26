@@ -1,5 +1,6 @@
 from flask import request, redirect, render_template
 from time import time as now
+from sqlalchemy import func
 
 from kottu import app
 from kottu.models import Post, Blog
@@ -69,6 +70,9 @@ def blog(id, popular, page):
 		title = 'Kottu: Latest posts from {}'
 	posts = posts.paginate(page, PER_PAGE)
 
+	stats = Post.query.with_entities(func.max(Post.timestamp).label('updated'),
+		func.avg(Post.buzz).label('buzz')).filter(Post.blog_id == id).first()
+
 	return render_template('items.html', title=title.format(blog.name),
 		posts=posts, endpoint='blog', blog=blog, popular=popular,
-		lang=None, time=None)
+		updated=stats[0], buzz=stats[1], lang=None, time=None)
