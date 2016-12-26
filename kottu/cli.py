@@ -42,17 +42,17 @@ def feedget():
 def fetchandstoreposts(blog_id, blog_rss):
 	click.echo('Fetching feed: ' + blog_rss)
 	feed = feedparser.parse(blog_rss)
-	if(len(feed.entries)):
+	if len(feed.entries):
 		click.echo('{} items returned'.format(len(feed.entries)));
 		for item in feed.entries:
 			# we make sure that the post is not "future dated"
 			post_time = int(min(time.mktime(item.published_parsed), time.time()))
 
 			# regex to remove html tags, htmlentities and urls
-			summary = re.sub("(<[^>]+>|&[^;]+;|(http)s?:\/\/\S+)", "", item.summary).strip()
+			summary = re.sub("(<[^>]+>|&[^;]+;|(https?:\/\/\S+))", "", item.summary).strip()
 
 			post = Post(blog_id, item.link, item.title, summary, 
-				getlang(item.title + summary), post_time)
+				getlang(item.title + summary), post_time, fetchthumb(item))
 			db.session.add(post)
 			try:
 				db.session.commit()
@@ -63,3 +63,16 @@ def fetchandstoreposts(blog_id, blog_rss):
 	else:
 		click.echo('Error! Feed returned no items.')
 		return False
+
+def fetchthumb(item):
+	text = item.summary
+	if 'content' in item:
+		text = item.content[0].value
+
+	# regex to get an image if available
+	thumb_search = re.search('(https?:\/\/[\S]+\.(jpg|png|jpeg))', text, re.IGNORECASE)
+
+	if thumb_search:
+		return thumb_search.group(1)
+	else:
+		return None
